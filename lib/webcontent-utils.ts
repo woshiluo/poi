@@ -130,6 +130,7 @@ export function stopNavigateAndHandleNewWindow(id: number) {
           plugins: true,
           sandbox: false,
           webviewTag: true,
+          backgroundThrottling: false,
         },
         transparent: isModernDarwin,
         backgroundMaterial: config.get('poi.appearance.vibrant', 0) ? 'acrylic' : 'none',
@@ -152,7 +153,7 @@ export function stopNavigateAndHandleNewWindow(id: number) {
       if (frameName.startsWith('plugin[kangame]')) {
         options.useContentSize = true
         _.set(options, ['webPreferences', 'webSecurity'], false)
-        _.set(options, ['webPreferences', 'backgroundThrottling '], false)
+        _.set(options, ['webPreferences', 'backgroundThrottling'], false)
         _.set(options, ['webPreferences', 'nodeIntegration'], false)
         _.set(options, ['webPreferences', 'nodeIntegrationInSubFrames'], true)
         _.set(options, ['webPreferences', 'contextIsolation'], false)

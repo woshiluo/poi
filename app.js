@@ -1,6 +1,6 @@
 const electronRemote = require('@electron/remote/main')
 const { X509Certificate, createHash } = require('crypto')
-const { app, BrowserWindow, ipcMain, nativeImage, shell } = require('electron')
+const { app, BrowserWindow, ipcMain, nativeImage, powerSaveBlocker, shell } = require('electron')
 const fs = require('fs-extra')
 const path = require('path-extra')
 
@@ -121,6 +121,8 @@ app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required')
 app.commandLine.appendSwitch('disable-site-isolation-trials')
 
 app.commandLine.appendSwitch('disable-features', 'CalculateNativeWinOcclusion')
+app.commandLine.appendSwitch('disable-backgrounding-occluded-windows')
+app.commandLine.appendSwitch('disable-renderer-backgrounding')
 
 // Enable experimental require() features, which is required by some dependencies
 app.commandLine.appendSwitch('experimental-require-module')
@@ -217,6 +219,7 @@ if (!getLock) {
 }
 
 app.on('ready', () => {
+  powerSaveBlocker.start('prevent-app-suspension')
   require('electron-react-titlebar/main').initialize()
   const { screen } = require('electron')
   shortcut.register()
@@ -280,8 +283,10 @@ app.on('ready', () => {
     mainWindow.show()
   })
 
+  mainWindow.webContents.setBackgroundThrottling(false)
   electronRemote.enable(mainWindow.webContents)
-  mainWindow.webContents.addListener('did-attach-webview', (e, webContent) => {
+  mainWindow.webContents.addListener('did-attach-webview', (_e, webContent) => {
+    webContent.setBackgroundThrottling(false)
     electronRemote.enable(webContent)
   })
 

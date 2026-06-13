@@ -57,6 +57,9 @@ export default {
       {
         show: false,
         icon: path.join(global.ROOT, 'assets', 'icons', 'poi.ico'),
+        webPreferences: {
+          backgroundThrottling: false,
+        },
       },
       normalizePosition(options),
     )

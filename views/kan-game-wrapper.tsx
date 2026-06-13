@@ -297,7 +297,9 @@ class KanGameWrapperInner extends Component<KanGameWrapperProps, KanGameWrapperS
       Number.isNaN(getStore('layout.webview.width')) ? 1200 : getStore('layout.webview.width'),
       Number.isNaN(getStore('layout.webview.height')) ? 720 : getStore('layout.webview.height'),
     )
-    this.webview.current?.getWebContents().addListener('certificate-error', this.handleCertError)
+    const wc = this.webview.current?.getWebContents()
+    wc?.addListener('certificate-error', this.handleCertError)
+    wc?.setBackgroundThrottling(false)
   }
 
   handleWebviewUnmount = () => {
